@@ -18,3 +18,7 @@ if($mbe4obj->is_valid_responsecode($result))
 else
     echo "Error ". $result.": " . $mbe4obj->get_responsemsg_by_responsecode($result);
 ```
+
+mbe4 mobile payment widget reference
+====================================
+If you need some informations about the mbe4-specifications, please take a look at http://www.scribd.com/doc/50699085/Anlage3-mbe4-Spezifikation-Mobile-Payment-Widget-v2-2
