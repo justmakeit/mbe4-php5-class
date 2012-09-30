@@ -1,6 +1,24 @@
 <?php
 
+  /** 
+  * mbe4 payment widget class
+  */
 class mbe4 {
+  /** 
+  *  __construct-function is called on object create. Defines some variables.
+  *  
+  *  @param string $username
+  *	mbe4 username.
+  *  @param string $password
+  *	mbe4 password.
+  *  @param int $clientid
+  *	mbe4 clientid.
+  *  @param int $serviceid
+  *	mbe4 serviceid
+  *  @param string $url
+  *	mbe4-URL for the transaction.
+  *
+  */
   function __construct($username, $password, $clientid, $serviceid, $url="https://billing.mbe4.de/widget/singlepayment") {
       $this->username = $username;
       $this->password = $password;
@@ -9,33 +27,15 @@ class mbe4 {
       $this->url = $url;
   }
 
-  /*
-  *  Senden der Daten an mbe4.
-  *  params: 
-  *   $amount: Die Transaktionssumme in EUR
-  *   $contentid: Die Art des zu Buchenden Contents.
-  *		1: News/Info
-  *		2. Chat/Flirt
-  *		3. Game
-  *		4. Klingelton
-  *		5. Bild/Logo
-  *		6. Videoclip
-  *		7. Musikdatei
-  *		8. Lokalisierung
-  *		9. Voting
-  *		10. Gewinnspiel
-  *		11. Portal Zugang
-  *		12. Software
-  *		13. Dokument
-  *		14. Ticket
-  *		15. Horoskop
-  *		16. Freizeit
-  *		17. Unterwegs
-  *		18. Finanzen
-  *		19. Shopping
-  *		20. E-Mail
-  *		21. Spende
-  *  return:
+  /** 
+  *  Create a array with all transaction-data needed.
+  *  
+  *  @param int $amount
+  *	Amount for the transaction.
+  *  @param int $contentclass
+  *	Contentid for the transaction. contentclass-codes-list available in readme.md or at https://github.com/justmakeit/mbe4-php5-class/blob/master/README.md
+  *
+  *  @return array
   *	Liefert ein Key/Value-Array zurück, welches per GET an mbe4 übertragen werden muss.
   *
   */
@@ -78,16 +78,19 @@ class mbe4 {
   }
   return $data;
   }
-  
-/*	validate_transaction($mbe4_params)
-*	Validierung der Zahlung. Dafür werden die von mbe4 übergebenen Parameter 
-*	plus das mbe4-Password hintereinander gehängt und eine MD5-Summe aus dem String erstellt.
-*	params:
-*		$mbe4_params: Key-Value-Array aus dem per GET übergebenen Parametern
-*	return:
-*		Response-Code, 0 bedeutet erfolgreiche Zahlung
-*
-*/
+
+  /** 
+  *  Validate the result from the mbe4-redirect
+  *  
+  *  @param array $mbe4_params
+  *	$_GET-Array from the mbe4-redirect.
+  *  @param string $mbe4_password
+  *	mbe4 password
+  *
+  *  @return int
+  *	Returns the mbe4-responsecode
+  *
+  */
   function validate_transaction($mbe4_params, $mbe4_password) {
       // check hash Signierung
       $hashbase=
@@ -105,13 +108,35 @@ class mbe4 {
       return $mbe4_params["responsecode"]; // Transaktionscode zurückgeben
   }
   
+  /** 
+  *  Check the response, if everything is fine, TRUE is returned
+  *  
+  *  @param int $amount
+  *	Amount for the transaction.
+  *  @param int $contentclass
+  *	Contentid for the transaction. contentclass-codes-list available in readme.md or at https://github.com/justmakeit/mbe4-php5-class/blob/master/README.md
+  *
+  *  @return array
+  *	Liefert ein Key/Value-Array zurück, welches per GET an mbe4 übertragen werden muss.
+  *
+  */
   function is_valid_responsecode($responsecode) {
     if($responsecode==0)
 	return TRUE;
     else
 	return FALSE;
   }
-  
+
+  /** 
+  *  Get Response-Message from Responsecode
+  *  
+  *  @param int $responsecode
+  *	responsecode from the transaction.
+  *
+  *  @return string
+  *	Returns Responsemessage.
+  *
+  */
   function get_responsemsg_by_responsecode($responsecode){
     switch($responsecode){
 	case 0: return('OK');
@@ -141,6 +166,4 @@ class mbe4 {
     }
   }
 }
-  
-
 ?>
